@@ -8,3 +8,4 @@ wget "https://github.com/neovim/neovim/releases/download/v${NEOVIM_VERSION}/${NE
 tar -xzf "$NEOVIM_ARCHIVE" -C "$NVIM_DIR"
 ln -s "$NVIM_DIR/nvim-linux64/bin/nvim" "$BIN_DIR/nvim"
 rm "$NEOVIM_ARCHIVE"
+sudo mv ~/.local/bin/nvim /usr/bin/
