@@ -3,11 +3,13 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"os/exec"
 	"strings"
+	"time"
 )
 
 const repositoryURL = "https://api.github.com/repos/RealLava/endget/contents/applications"
@@ -41,13 +43,30 @@ func fetchAvailablePrograms() ([]string, error) {
 	return programs, nil
 }
 
-func installProgram(program string) {
+const progressBarWidth = 50
+
+func displayProgressBar(progress float64) {
+	bar := "["
+	completeWidth := int(progress * float64(progressBarWidth))
+	for i := 0; i < progressBarWidth; i++ {
+		if i < completeWidth {
+			bar += "="
+		} else {
+			bar += " "
+		}
+	}
+	bar += "]"
+	fmt.Printf("\r%s %.1f%%", bar, progress*100)
+}
+
+func installProgram(program string, done chan bool) {
 	url := fmt.Sprintf("https://raw.githubusercontent.com/RealLava/endget/main/applications/%s", program)
 	fmt.Printf("Installing program '%s' from URL: %s\n", program, url)
 
 	response, err := http.Get(url)
 	if err != nil {
 		fmt.Println("Error fetching script:", err)
+		done <- false
 		return
 	}
 	defer response.Body.Close()
@@ -55,16 +74,49 @@ func installProgram(program string) {
 	scriptContent, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		fmt.Println("Error reading script content:", err)
+		done <- false
 		return
 	}
 
 	cmd := exec.Command("bash", "-c", string(scriptContent))
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	if err := cmd.Run(); err != nil {
-		fmt.Println("Error:", err)
+	outputPipe, _ := cmd.StdoutPipe()
+
+	err = cmd.Start()
+	if err != nil {
+		fmt.Println("Error starting command:", err)
+		done <- false
 		return
 	}
+
+	totalBytes := int(response.ContentLength)
+	buf := make([]byte, 1024)
+	bytesRead := 0
+
+	go func() {
+		for {
+			n, err := outputPipe.Read(buf)
+			if err != nil {
+				if err == io.EOF {
+					break
+				}
+				fmt.Println("Error reading output:", err)
+				break
+			}
+			bytesRead += n
+			displayProgressBar(float64(bytesRead) / float64(totalBytes))
+			os.Stdout.Write(buf[:n])
+		}
+	}()
+
+	err = cmd.Wait()
+	if err != nil {
+		fmt.Println("Error:", err)
+		done <- false
+		return
+	}
+
+	fmt.Println()
+	done <- true
 }
 
 func main() {
@@ -99,5 +151,22 @@ func main() {
 		return
 	}
 
-	installProgram(program)
+	done := make(chan bool)
+	go installProgram(program, done)
+
+	go func() {
+		for i := 0; i <= progressBarWidth; i++ {
+			time.Sleep(100 * time.Millisecond)
+			displayProgressBar(float64(i) / float64(progressBarWidth))
+		}
+		fmt.Println()
+		done <- true
+	}()
+
+	installationResult := <-done
+	if installationResult {
+		fmt.Println("Installation completed successfully.")
+	} else {
+		fmt.Println("Installation failed.")
+	}
 }
