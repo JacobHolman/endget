@@ -1,6 +1,6 @@
 BIN_DIR="$HOME/.local/bin"
 mkdir -p "$BIN_DIR"
-VIM_VERSION="8.2.3456
+VIM_VERSION="8.2.3456"
 VIM_ARCHIVE="vim-${VIM_VERSION}.tar.gz"
 wget "https://ftp.gnu.org/pub/gnu/vim/${VIM_ARCHIVE}"
 tar -xzf "$VIM_ARCHIVE"
@@ -10,5 +10,5 @@ make
 make install
 cd ..
 rm -rf "vim${VIM_VERSION}" "$VIM_ARCHIVE"
-sudo chmod +x vim
 ln -s "$HOME/.local/bin/vim" "$BIN_DIR/vim"
+chmod +x "$BIN_DIR/vim"
