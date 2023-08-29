@@ -1,11 +1,13 @@
-VIM_DIR="$HOME/.local/vim"
 BIN_DIR="$HOME/.local/bin"
-mkdir -p "$VIM_DIR"
 mkdir -p "$BIN_DIR"
-NEOVIM_VERSION="9.0.1815"
-NEOVIM_ARCHIVE="vim-9.0.1815.tar.gz"
-wget "https://github.com/neovim/neovim/releases/download/v${VIM_VERSION}/${VIM_ARCHIVE}"
-tar -xzf "$VIM_ARCHIVE" -C "$VIM_DIR"
-ln -s "$VIM_DIR/nvim-linux64/bin/nvim" "$BIN_DIR/vim"
-rm "$VIM_ARCHIVE"
-sudo mv ~/.local/bin/vim /usr/bin/
+VIM_VERSION="8.2.3456"  # Replace this with the desired Vim version
+VIM_ARCHIVE="vim-${VIM_VERSION}.tar.gz"
+wget "https://ftp.gnu.org/pub/gnu/vim/${VIM_ARCHIVE}"
+tar -xzf "$VIM_ARCHIVE"
+cd "vim${VIM_VERSION}"
+./configure --prefix="$HOME/.local"
+make
+make install
+cd ..
+rm -rf "vim${VIM_VERSION}" "$VIM_ARCHIVE"
+ln -s "$HOME/.local/bin/vim" "$BIN_DIR/vim"
