@@ -1,11 +1,13 @@
+#!/bin/bash
 JAVA_VERSION="17"
 ARCH="x64"
 INSTALL_DIR="/usr/local"
-DOWNLOAD_URL="https://github.com/AdoptOpenJDK/openjdk${JAVA_VERSION}-binaries/releases/download/jdk-${JAVA_VERSION}%2B${ARCH}_openj9-${JAVA_VERSION}/OpenJDK${JAVA_VERSION}U-jdk_${ARCH}_linux_openj9_${JAVA_VERSION}_openj9-${JAVA_VERSION}_bin.tar.gz"
+DOWNLOAD_URL="https://github.com/AdoptOpenJDK/openjdk${JAVA_VERSION}-binaries/releases/download/jdk-${JAVA_VERSION}%2B${ARCH}_adopt/${JAVA_VERSION}/OpenJDK${JAVA_VERSION}U-jdk_${ARCH}_linux_hotspot_${JAVA_VERSION}.tar.gz"
 wget -O openjdk.tar.gz $DOWNLOAD_URL
-tar -xvzf openjdk.tar.gz
-sudo mv jdk-${JAVA_VERSION}+${ARCH} ${INSTALL_DIR}/
-echo "export JAVA_HOME=${INSTALL_DIR}/jdk-${JAVA_VERSION}+${ARCH}" >> ~/.bashrc
+tar -xvzf openjdk.tar.gz -C $INSTALL_DIR
+EXTRACTED_DIR=$(tar -tzf openjdk.tar.gz | head -1 | cut -f1 -d"/")
+sudo mv ${INSTALL_DIR}/${EXTRACTED_DIR} ${INSTALL_DIR}/jdk-${JAVA_VERSION}
+echo "export JAVA_HOME=${INSTALL_DIR}/jdk-${JAVA_VERSION}" >> ~/.bashrc
 echo "export PATH=\$PATH:\$JAVA_HOME/bin" >> ~/.bashrc
 source ~/.bashrc
 java -version
