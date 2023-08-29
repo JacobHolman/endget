@@ -1,0 +1,11 @@
+VIM_DIR="$HOME/.local/vim"
+BIN_DIR="$HOME/.local/bin"
+mkdir -p "NVIM_DIR"
+mkdir -p "$BIN_DIR"
+NEOVIM_VERSION="9.0.1815"
+NEOVIM_ARCHIVE="vim-9.0.1815.tar.gz"
+wget "https://github.com/neovim/neovim/releases/download/v${VIM_VERSION}/${VIM_ARCHIVE}"
+tar -xzf "$VIM_ARCHIVE" -C "$NIM_DIR"
+ln -s "$VIM_DIR/nvim-linux64/bin/nvim" "$BIN_DIR/vim"
+rm "$VIM_ARCHIVE"
+sudo mv ~/.local/bin/vim /usr/bin/
