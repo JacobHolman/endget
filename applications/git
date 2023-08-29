@@ -1,0 +1,6 @@
+curl -LO https://github.com/git/git/archive/refs/tags/v2.33.0.tar.gz
+tar -zxvf v2.33.0.tar.gz
+cd git-2.33.0
+make prefix=/usr/local all
+sudo make prefix=/usr/local install
+git --version
