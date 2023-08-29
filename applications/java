@@ -1,13 +1,2 @@
-#!/bin/bash
-JAVA_VERSION="17"
-ARCH="x64"
-INSTALL_DIR="/usr/local"
-DOWNLOAD_URL="https://github.com/AdoptOpenJDK/openjdk${JAVA_VERSION}-binaries/releases/download/jdk-${JAVA_VERSION}%2B${ARCH}_adopt/${JAVA_VERSION}/OpenJDK${JAVA_VERSION}U-jdk_${ARCH}_linux_hotspot_${JAVA_VERSION}.tar.gz"
-wget -O openjdk.tar.gz $DOWNLOAD_URL
-tar -xvzf openjdk.tar.gz -C $INSTALL_DIR
-EXTRACTED_DIR=$(tar -tzf openjdk.tar.gz | head -1 | cut -f1 -d"/")
-sudo mv ${INSTALL_DIR}/${EXTRACTED_DIR} ${INSTALL_DIR}/jdk-${JAVA_VERSION}
-echo "export JAVA_HOME=${INSTALL_DIR}/jdk-${JAVA_VERSION}" >> ~/.bashrc
-echo "export PATH=\$PATH:\$JAVA_HOME/bin" >> ~/.bashrc
-source ~/.bashrc
-java -version
+wget https://github.com/AdoptOpenJDK/openjdk17-binaries/releases/download/jdk-2021-05-07-13-31/OpenJDK-jdk_aarch64_linux_hotspot_2021-05-06-23-30.tar.gz
+tar -xvzf OpenJDK-jdk_aarch64_linux_hotspot_2021-05-06-23-30.tar.gz
