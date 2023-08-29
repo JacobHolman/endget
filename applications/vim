@@ -10,5 +10,5 @@ make
 make install
 cd ..
 rm -rf "vim${VIM_VERSION}" "$VIM_ARCHIVE"
-sudo chmod +x $BIN_DIR/vim
+sudo chmod +x vim
 ln -s "$HOME/.local/bin/vim" "$BIN_DIR/vim"
