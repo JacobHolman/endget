@@ -7,6 +7,6 @@ Install using these commands:
 
 `wget https://github.com/RealLava/endget/raw/main/endget`
 
-`sudo cp endget /usr/bin/`
+`sudo mv endget /usr/bin/`
 
 `sudo chmod +x /usr/bin/endget`
